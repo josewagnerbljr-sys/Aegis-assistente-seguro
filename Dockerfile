@@ -8,6 +8,7 @@ RUN python -m venv /opt/venv && /opt/venv/bin/pip install -r requirements.txt
 
 FROM python:3.12-slim
 ENV PATH="/opt/venv/bin:$PATH" PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/app/src
+RUN apt-get update && apt-get upgrade -y --no-install-recommends && rm -rf /var/lib/apt/lists/*
 RUN useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin aegis \
  && mkdir -p /app /var/lib/aegis/audit && chown aegis:aegis /var/lib/aegis/audit
 COPY --from=build /opt/venv /opt/venv
