@@ -15,6 +15,7 @@ COPY --from=build /opt/venv /opt/venv
 WORKDIR /app
 COPY src ./src
 COPY data/kb ./data/kb
+RUN mkdir -p /app/var && chown -R 10001:10001 /app/var
 USER 10001:10001
 EXPOSE 8000
 HEALTHCHECK --interval=15s --timeout=3s --retries=3 \
