@@ -72,7 +72,7 @@ docker compose up --build -d                       # https://localhost:8443
 
 Para IA generativa, defina `AEGIS_LLM_CHAIN=anthropic,openai_compat` e as chaves correspondentes (ver `.env.example`). Sem isso, o assistente funciona 100% offline.
 
-## Status de verificação (seja transparente no seu portfólio)
+## Status de verificação
 
 | Item | Estado |
 |------|--------|
@@ -86,7 +86,7 @@ Para IA generativa, defina `AEGIS_LLM_CHAIN=anthropic,openai_compat` e as chaves
 As métricas de avaliação usam um conjunto escrito pelo mesmo autor da base: servem como teste de regressão (veja `docs/05`).
 
 ## Roadmap
-Embeddings + reranking, mTLS e ACL de Redis por serviço, OIDC/SSO, painel de métricas (Prometheus), exportação da auditoria para armazenamento imutável, assinatura de imagens com cosign no CI, interface web.
+Embeddings + reranking, mTLS e ACL de Redis por serviço, OIDC/SSO, painel de métricas (Prometheus), exportação da auditoria para armazenamento imutável e assinatura de imagens com cosign no CI.
 
 ## Estrutura
 ```
@@ -100,4 +100,4 @@ docs/             documentação dos 6 passos + arquitetura/ameaças
 .github/workflows CI DevSecOps
 ```
 
-Uso educacional e defensivo. Licença: defina a sua (MIT sugerida).
+Uso educacional e defensivo. Licença: [MIT](LICENSE).

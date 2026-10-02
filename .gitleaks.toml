@@ -1,0 +1,12 @@
+title = "Aegis - gitleaks"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Valores FALSOS usados como dados de teste do detector de segredos (nao sao credenciais reais)"
+paths = [
+  '''tests/.*''',
+  '''eval/golden_set\.json''',
+  '''data/treinamento/trilha_seguranca\.md''',
+]
