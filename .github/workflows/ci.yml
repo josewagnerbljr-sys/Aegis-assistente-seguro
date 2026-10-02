@@ -1,0 +1,82 @@
+# Pipeline DevSecOps. Em produção, fixe cada "uses:" por SHA de commit (supply chain).
+name: ci
+on:
+  push: {branches: [main]}
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: gitleaks/gitleaks-action@v2
+        env: {GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"}
+
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12", cache: pip}
+      - run: pip install -r requirements-dev.txt
+      - name: Lint
+        run: ruff check src tests eval scripts
+      - name: SAST (Bandit)
+        run: bandit -q -r src
+      - name: SCA (pip-audit)
+        run: pip-audit -r requirements.txt
+      - name: Testes + cobertura
+        run: AEGIS_ENV=dev python -m pytest -q --cov=aegis --cov-fail-under=75
+      - name: Gate de avaliação do assistente
+        run: AEGIS_ENV=dev PYTHONPATH=src python eval/run_eval.py
+      - uses: actions/upload-artifact@v4
+        with: {name: eval-report, path: eval/report.json}
+
+  container:
+    needs: [quality]
+    runs-on: ubuntu-latest
+    permissions: {contents: read, security-events: write}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Política do Dockerfile (Conftest)
+        run: |
+          curl -sSL https://github.com/open-policy-agent/conftest/releases/download/v0.56.0/conftest_0.56.0_Linux_x86_64.tar.gz | tar xz conftest
+          ./conftest test Dockerfile --policy data/treinamento/pipelines/policy
+      - run: docker build -t aegis:${{ github.sha }} .
+      - name: Scan de vulnerabilidades (Trivy)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: aegis:${{ github.sha }}
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"
+      - name: SBOM (Syft)
+        uses: anchore/sbom-action@v0
+        with:
+          image: aegis:${{ github.sha }}
+          format: cyclonedx-json
+          output-file: sbom.cdx.json
+      - uses: actions/upload-artifact@v4
+        with: {name: sbom, path: sbom.cdx.json}
+
+  dast:
+    needs: [container]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sobe a stack de staging (dev, memória)
+        run: |
+          docker build -t aegis:dast .
+          docker run -d --name aegis -p 8000:8000 -e AEGIS_ENV=dev aegis:dast
+          sleep 8
+      - name: OWASP ZAP baseline
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: http://localhost:8000/openapi.json
+          fail_action: false

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aegis · Assistente de Segurança</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header><span class="logo" aria-hidden="true">🛡️</span><h1>Aegis</h1><span class="sub">assistente de segurança defensiva</span>
+  <span id="who" class="who" hidden></span><button id="logout" class="ghost" hidden>Sair</button></header>
+
+<main id="login-view">
+  <form id="login" class="card" autocomplete="on">
+    <h2>Entrar</h2>
+    <label>Usuário<input id="u" name="username" required maxlength="64" autocomplete="username"></label>
+    <label>Senha<input id="p" name="password" type="password" required maxlength="256" autocomplete="current-password"></label>
+    <button type="submit">Entrar</button>
+    <p id="login-err" class="err" role="alert"></p>
+    <p class="hint">O token fica só na memória desta aba; nada é salvo no navegador.</p>
+  </form>
+</main>
+
+<main id="chat-view" class="grid" hidden>
+  <section class="chat card" aria-label="Conversa">
+    <div id="log" role="log" aria-live="polite"></div>
+    <div id="chips" class="chips"></div>
+    <form id="ask" class="ask">
+      <input id="q" maxlength="2000" placeholder="Pergunte sobre segurança… ex.: Como evitar SQL injection?" required aria-label="Pergunta">
+      <button type="submit" id="send">Enviar</button>
+    </form>
+  </section>
+  <aside class="side">
+    <div class="card"><h3>Caminho da última pergunta</h3>
+      <ol id="trace" class="trace">
+        <li data-s="guard">Guarda de entrada</li><li data-s="dlp">DLP (mascaramento)</li><li data-s="nlu">NLU</li>
+        <li data-s="rag">Recuperação (RAG)</li><li data-s="gen">Geração + citações</li><li data-s="out">Guarda de saída</li>
+      </ol><p id="trace-note" class="hint">Envie uma pergunta para ver cada estágio.</p></div>
+    <div class="card"><h3>Camadas ativas</h3>
+      <ul class="layers"><li>🔒 TLS + rate limit (borda)</li><li>🪪 JWT curto + RBAC</li><li>🧠 Anti-injection + DLP</li>
+      <li>🔐 AES-GCM + HMAC no barramento</li><li>🧾 Auditoria encadeada</li><li>📦 Contêiner endurecido</li></ul></div>
+  </aside>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+.env
+*.pem
+*.key
+deploy/certs/
+var/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+eval/report.json
+*.enc
+sbom*.json
+.pytest_tmp/
+.tmp/
+.venv/
+.venv/

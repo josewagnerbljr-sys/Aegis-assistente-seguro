@@ -1,0 +1,50 @@
+# Equivalente GitLab CI do pipeline DevSecOps (referência para o treinamento).
+stages: [secrets, quality, test, build, scan, dast, release]
+default:
+  image: python:3.12-slim
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.pip"
+
+secret_detection:
+  stage: secrets
+  image: {name: zricethezav/gitleaks:latest, entrypoint: [""]}
+  script: [gitleaks detect --source . --redact --exit-code 1]
+
+lint_sast:
+  stage: quality
+  script:
+    - pip install -r requirements-dev.txt
+    - ruff check src tests eval
+    - bandit -q -r src
+    - pip-audit -r requirements.txt
+
+unit_and_eval:
+  stage: test
+  script:
+    - pip install -r requirements-dev.txt
+    - AEGIS_ENV=dev python -m pytest -q --cov=aegis --cov-fail-under=75
+    - AEGIS_ENV=dev PYTHONPATH=src python eval/run_eval.py
+  artifacts: {paths: [eval/report.json], when: always}
+
+build_image:
+  stage: build
+  image: {name: gcr.io/kaniko-project/executor:debug, entrypoint: [""]}
+  script:
+    - /kaniko/executor --context . --dockerfile Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
+container_scanning:
+  stage: scan
+  image: {name: aquasec/trivy:latest, entrypoint: [""]}
+  script: [trivy image --severity CRITICAL,HIGH --ignore-unfixed --exit-code 1 $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA]
+
+dast_baseline:
+  stage: dast
+  image: {name: ghcr.io/zaproxy/zaproxy:stable, entrypoint: [""]}
+  script: [zap-baseline.py -t $STAGING_URL -I]
+  rules: [{if: '$STAGING_URL'}]
+
+sign_image:
+  stage: release
+  image: {name: gcr.io/projectsigstore/cosign:latest, entrypoint: [""]}
+  script: [cosign sign --yes $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA]
+  rules: [{if: '$CI_COMMIT_BRANCH == "main"'}]

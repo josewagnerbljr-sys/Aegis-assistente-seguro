@@ -1,0 +1,1022 @@
+[
+  {
+    "id": "kb-001",
+    "titulo": "OWASP Top 10: visão geral dos riscos web",
+    "categoria": "appsec",
+    "nivel": "basico",
+    "tags": [
+      "owasp",
+      "top 10",
+      "riscos",
+      "web",
+      "vulnerabilidades",
+      "checklist"
+    ],
+    "conteudo": "O OWASP Top 10 é a lista de referência dos riscos mais críticos em aplicações web. A edição 2021 inclui controle de acesso quebrado, falhas criptográficas, injeção, design inseguro, configuração incorreta, componentes vulneráveis e desatualizados, falhas de autenticação, falhas de integridade de software e dados, falhas de log e monitoramento e SSRF. Use-a como checklist de requisitos e testes, não como padrão de conformidade completo (verifique se há edição mais recente).",
+    "passos": [
+      "Mapeie cada item do Top 10 para controles e testes do projeto",
+      "Inclua os riscos nos critérios de aceite das histórias de usuário",
+      "Automatize verificações no pipeline (SAST, SCA, DAST)",
+      "Revise a lista a cada nova edição publicada pelo OWASP"
+    ],
+    "fontes": [
+      "OWASP Top 10 (2021)"
+    ]
+  },
+  {
+    "id": "kb-002",
+    "titulo": "Injeção SQL e consultas parametrizadas",
+    "categoria": "appsec",
+    "nivel": "basico",
+    "tags": [
+      "sql injection",
+      "injecao sql",
+      "sqli",
+      "banco de dados",
+      "consulta parametrizada",
+      "prepared statement"
+    ],
+    "conteudo": "Injeção SQL ocorre quando a entrada do usuário é concatenada em uma consulta e passa a ser interpretada como código. A defesa principal são consultas parametrizadas (prepared statements) ou ORM com parâmetros vinculados, nunca concatenação de strings. Validação de entrada e menor privilégio na conta do banco reduzem o impacto, mas não substituem a parametrização.",
+    "passos": [
+      "Use consultas parametrizadas em todo acesso a dados",
+      "Dê à conta da aplicação apenas os privilégios necessários (sem DDL)",
+      "Valide tipo, tamanho e lista de valores permitidos",
+      "Rode SAST e DAST para detectar concatenação de SQL",
+      "Use WAF apenas como camada adicional"
+    ],
+    "fontes": [
+      "OWASP Top 10 (2021) A03",
+      "OWASP Cheat Sheet: Query Parameterization"
+    ]
+  },
+  {
+    "id": "kb-003",
+    "titulo": "XSS (Cross-Site Scripting) e CSP",
+    "categoria": "appsec",
+    "nivel": "basico",
+    "tags": [
+      "xss",
+      "cross-site scripting",
+      "javascript",
+      "csp",
+      "content security policy",
+      "encoding de saida"
+    ],
+    "conteudo": "XSS permite que um atacante execute JavaScript no navegador da vítima quando conteúdo não confiável é exibido sem tratamento. Defenda com codificação de saída conforme o contexto (HTML, atributo, JavaScript, URL), frameworks que escapam por padrão e uma Content Security Policy restritiva. Evite innerHTML com dados externos e marque cookies de sessão como HttpOnly, Secure e SameSite.",
+    "passos": [
+      "Codifique toda saída conforme o contexto",
+      "Prefira frameworks com escape automático",
+      "Defina uma CSP restritiva (sem unsafe-inline)",
+      "Use cookies HttpOnly, Secure e SameSite",
+      "Sanitize HTML permitido com biblioteca consolidada"
+    ],
+    "fontes": [
+      "OWASP Cheat Sheet: XSS Prevention"
+    ]
+  },
+  {
+    "id": "kb-004",
+    "titulo": "Controle de acesso quebrado e IDOR",
+    "categoria": "appsec",
+    "nivel": "intermediario",
+    "tags": [
+      "idor",
+      "controle de acesso",
+      "autorizacao",
+      "broken access control",
+      "objeto",
+      "permissao"
+    ],
+    "conteudo": "Controle de acesso quebrado é o risco número 1 do OWASP Top 10 2021. Um exemplo clássico é o IDOR: o usuário troca o identificador na URL e acessa dados de outra pessoa. A autorização deve ser verificada no servidor, em toda requisição e por objeto, com negação por padrão. Esconder botões na interface não é controle de acesso.",
+    "passos": [
+      "Negue por padrão e autorize no servidor em cada requisição",
+      "Verifique a propriedade do objeto, não só o papel do usuário",
+      "Use identificadores não sequenciais como defesa adicional",
+      "Escreva testes automatizados de autorização",
+      "Registre e alerte tentativas de acesso negadas"
+    ],
+    "fontes": [
+      "OWASP Top 10 (2021) A01"
+    ]
+  },
+  {
+    "id": "kb-005",
+    "titulo": "Gestão de segredos: senhas, chaves de API e tokens",
+    "categoria": "iam",
+    "nivel": "basico",
+    "tags": [
+      "segredos",
+      "cofre",
+      "vault",
+      "chaves de api",
+      "senhas",
+      "rotacao",
+      "credenciais",
+      "secrets manager"
+    ],
+    "conteudo": "Segredos (senhas, tokens, chaves de API, certificados) nunca devem ficar no código, em imagens de contêiner ou em arquivos versionados. Guarde-os em um cofre (HashiCorp Vault, AWS Secrets Manager, Azure Key Vault) ou nos segredos do orquestrador, injetados em tempo de execução, com rotação periódica e acesso por identidade. Prefira credenciais de curta duração a chaves estáticas.",
+    "passos": [
+      "Remova segredos do código e do histórico",
+      "Use um cofre de segredos e injete em runtime",
+      "Rotacione periodicamente e após qualquer suspeita",
+      "Prefira credenciais temporárias e identidade de workload",
+      "Ative secret scanning no repositório"
+    ],
+    "fontes": [
+      "OWASP Cheat Sheet: Secrets Management"
+    ]
+  },
+  {
+    "id": "kb-006",
+    "titulo": "Armazenamento seguro de senhas (hash)",
+    "categoria": "iam",
+    "nivel": "basico",
+    "tags": [
+      "hash de senha",
+      "argon2",
+      "scrypt",
+      "bcrypt",
+      "salt",
+      "armazenar senha",
+      "algoritmo"
+    ],
+    "conteudo": "Senhas devem ser armazenadas com funções de hash lentas e com sal, como Argon2id (preferido), scrypt ou bcrypt. Nunca use MD5, SHA-1 ou SHA-256 simples. Ajuste o custo para que a verificação leve algumas dezenas a centenas de milissegundos no seu hardware, compare em tempo constante e considere um pepper guardado em cofre.",
+    "passos": [
+      "Use Argon2id, scrypt ou bcrypt com sal único por senha",
+      "Ajuste o custo ao hardware e reavalie com o tempo",
+      "Compare hashes em tempo constante",
+      "Permita migração de parâmetros (hash auto-descritivo)",
+      "Imponha MFA e limite tentativas de login"
+    ],
+    "fontes": [
+      "OWASP Cheat Sheet: Password Storage"
+    ]
+  },
+  {
+    "id": "kb-007",
+    "titulo": "Criptografia simétrica: AES-GCM e nonce",
+    "categoria": "cripto",
+    "nivel": "intermediario",
+    "tags": [
+      "aes",
+      "gcm",
+      "nonce",
+      "aead",
+      "criptografia simetrica",
+      "cifra autenticada",
+      "hkdf",
+      "derivacao de chaves"
+    ],
+    "conteudo": "AES-GCM é uma cifra autenticada (AEAD): garante confidencialidade e integridade. Use chave de 256 bits, um nonce único de 96 bits por mensagem com a mesma chave (repetir o nonce quebra a segurança) e dados associados (AAD) para vincular o contexto. Gere chaves com um CSPRNG, derive subchaves por finalidade com HKDF e rotacione periodicamente. Nunca implemente criptografia por conta própria; use bibliotecas consolidadas.",
+    "passos": [
+      "Gere um nonce aleatório novo a cada mensagem",
+      "Use AAD para vincular tópico, versão ou identificador",
+      "Derive subchaves por finalidade com HKDF",
+      "Rotacione chaves e planeje a re-cifragem",
+      "Use bibliotecas auditadas (cryptography, libsodium)"
+    ],
+    "fontes": [
+      "NIST SP 800-38D",
+      "OWASP Cheat Sheet: Cryptographic Storage"
+    ]
+  },
+  {
+    "id": "kb-008",
+    "titulo": "TLS e criptografia em trânsito",
+    "categoria": "cripto",
+    "nivel": "basico",
+    "tags": [
+      "tls",
+      "https",
+      "certificado",
+      "hsts",
+      "mtls",
+      "criptografia em transito",
+      "versao minima"
+    ],
+    "conteudo": "TLS protege dados em trânsito. Exija TLS 1.2 no mínimo e prefira 1.3, desative protocolos e cifras legados, use certificados válidos com renovação automática e HSTS. Dentro da rede interna, considere mTLS para que os serviços se autentiquem entre si (zero trust).",
+    "passos": [
+      "Exija TLS 1.2 ou superior (prefira 1.3)",
+      "Automatize emissão e renovação de certificados",
+      "Ative HSTS e redirecione HTTP para HTTPS",
+      "Use mTLS entre serviços internos quando possível",
+      "Teste a configuração com ferramentas como testssl.sh"
+    ],
+    "fontes": [
+      "OWASP Cheat Sheet: Transport Layer Security"
+    ]
+  },
+  {
+    "id": "kb-009",
+    "titulo": "Boas práticas para JWT",
+    "categoria": "iam",
+    "nivel": "intermediario",
+    "tags": [
+      "jwt",
+      "token",
+      "assinatura",
+      "exp",
+      "aud",
+      "iss",
+      "hs256",
+      "algoritmo none",
+      "sessao"
+    ],
+    "conteudo": "JWT deve ser assinado com algoritmo fixo no servidor (nunca aceite 'none' nem deixe o token escolher o algoritmo), ter validade curta e ter exp, iss e aud validados. Não coloque dados sensíveis no payload, pois ele é apenas codificado, não cifrado. Use refresh token com rotação e revogação quando necessário.",
+    "passos": [
+      "Fixe o algoritmo de verificação no servidor",
+      "Valide exp, iss, aud e exija esses claims",
+      "Use validade curta e refresh token com rotação",
+      "Não armazene dados sensíveis no payload",
+      "Tenha um mecanismo de revogação (jti)"
+    ],
+    "fontes": [
+      "OWASP Cheat Sheet: JSON Web Token"
+    ]
+  },
+  {
+    "id": "kb-010",
+    "titulo": "Menor privilégio, RBAC e MFA",
+    "categoria": "iam",
+    "nivel": "basico",
+    "tags": [
+      "menor privilegio",
+      "rbac",
+      "mfa",
+      "autenticacao multifator",
+      "fido2",
+      "passkeys",
+      "iam",
+      "papeis"
+    ],
+    "conteudo": "O princípio do menor privilégio concede a cada identidade apenas as permissões necessárias, pelo tempo necessário. Combine com autenticação multifator (MFA, de preferência resistente a phishing, como FIDO2/passkeys), papéis (RBAC) revisados periodicamente e contas de serviço separadas das humanas. Remova acessos no desligamento e registre toda ação privilegiada.",
+    "passos": [
+      "Defina papéis mínimos e revise-os periodicamente",
+      "Exija MFA, de preferência FIDO2/passkeys",
+      "Separe contas de serviço de contas humanas",
+      "Remova acessos ao desligar pessoas ou serviços",
+      "Audite ações privilegiadas"
+    ],
+    "fontes": [
+      "NIST SP 800-53 AC-6",
+      "NIST SP 800-63B"
+    ]
+  },
+  {
+    "id": "kb-011",
+    "titulo": "Imagens de contêiner seguras (Dockerfile)",
+    "categoria": "container",
+    "nivel": "basico",
+    "tags": [
+      "docker",
+      "dockerfile",
+      "imagem",
+      "container",
+      "multi-stage",
+      "distroless",
+      "non-root",
+      "imagem minima"
+    ],
+    "conteudo": "Use imagens base mínimas e oficiais (slim, distroless ou alpine) com versão fixa e, idealmente, digest. Faça build em múltiplos estágios para não levar compiladores e segredos para a imagem final, rode como usuário não-root e não instale ferramentas desnecessárias. Imagens menores têm menos vulnerabilidades e menor superfície de ataque.",
+    "passos": [
+      "Escolha uma base mínima e fixe versão ou digest",
+      "Use multi-stage build",
+      "Declare USER não-root",
+      "Não copie segredos para a imagem; use .dockerignore",
+      "Escaneie a imagem a cada build"
+    ],
+    "fontes": [
+      "CIS Docker Benchmark",
+      "OWASP Docker Security Cheat Sheet"
+    ]
+  },
+  {
+    "id": "kb-012",
+    "titulo": "Hardening de contêineres em execução",
+    "categoria": "container",
+    "nivel": "intermediario",
+    "tags": [
+      "runtime",
+      "cap_drop",
+      "read-only",
+      "no-new-privileges",
+      "privileged",
+      "seccomp",
+      "kubernetes",
+      "pod security",
+      "compose",
+      "hardening"
+    ],
+    "conteudo": "No runtime aplique: usuário não-root, sistema de arquivos somente leitura, cap_drop ALL, no-new-privileges, limites de CPU, memória e processos, sem modo privileged e sem montar o socket do Docker. Mantenha ativos os perfis seccomp e AppArmor padrão. No Kubernetes, use Pod Security Standards 'restricted' e NetworkPolicies.",
+    "passos": [
+      "Use read_only: true com tmpfs para /tmp",
+      "Aplique cap_drop: [ALL] e security_opt no-new-privileges",
+      "Defina limites de CPU, memória e pids",
+      "Nunca use privileged nem monte docker.sock",
+      "No Kubernetes, adote o perfil restricted"
+    ],
+    "fontes": [
+      "CIS Docker Benchmark",
+      "Kubernetes Pod Security Standards"
+    ]
+  },
+  {
+    "id": "kb-013",
+    "titulo": "Zero trust e segmentação de rede",
+    "categoria": "rede",
+    "nivel": "intermediario",
+    "tags": [
+      "zero trust",
+      "segmentacao",
+      "rede",
+      "microsegmentacao",
+      "firewall",
+      "network policy",
+      "rede interna",
+      "isolamento"
+    ],
+    "conteudo": "Zero trust parte do princípio 'nunca confiar, sempre verificar': nenhuma rede é confiável por padrão. Segmente em zonas (borda, aplicação, dados), isole a rede de dados sem acesso à internet, autorize cada chamada entre serviços e permita só o tráfego necessário (negação por padrão). Em Docker Compose use redes separadas com 'internal: true' para serviços que não devem sair.",
+    "passos": [
+      "Separe borda, aplicação e dados em redes distintas",
+      "Use internal: true nas redes sem necessidade de internet",
+      "Libere somente portas e fluxos necessários",
+      "Autentique serviços entre si (mTLS ou tokens)",
+      "Monitore tráfego leste-oeste"
+    ],
+    "fontes": [
+      "NIST SP 800-207"
+    ]
+  },
+  {
+    "id": "kb-014",
+    "titulo": "Scan de imagens e SBOM (Trivy, Syft)",
+    "categoria": "pipeline",
+    "nivel": "intermediario",
+    "tags": [
+      "sbom",
+      "trivy",
+      "grype",
+      "syft",
+      "scan de imagem",
+      "cve",
+      "cyclonedx",
+      "spdx",
+      "vulnerabilidades em containers"
+    ],
+    "conteudo": "Escaneie imagens de contêiner com Trivy, Grype ou similar a cada build e também periodicamente, pois novas CVEs surgem depois do deploy. Gere um SBOM (Syft; formatos CycloneDX ou SPDX) para saber exatamente o que há na imagem. Falhe o pipeline para severidades críticas e altas com correção disponível e mantenha uma política de exceções com prazo.",
+    "passos": [
+      "Execute trivy image no pipeline com --exit-code 1 para CRITICAL e HIGH",
+      "Gere o SBOM com syft e armazene como artefato",
+      "Reescaneie imagens publicadas em agenda",
+      "Registre exceções com dono e data de expiração"
+    ],
+    "fontes": [
+      "Trivy",
+      "Syft",
+      "CycloneDX",
+      "SPDX"
+    ]
+  },
+  {
+    "id": "kb-015",
+    "titulo": "Pipeline DevSecOps (shift-left)",
+    "categoria": "pipeline",
+    "nivel": "basico",
+    "tags": [
+      "devsecops",
+      "pipeline",
+      "ci/cd",
+      "shift-left",
+      "etapas",
+      "quality gate",
+      "github actions",
+      "gitlab ci",
+      "seguranca no ci"
+    ],
+    "conteudo": "DevSecOps integra segurança ao pipeline de CI/CD (shift-left). Estágios típicos: pre-commit (segredos), lint, SAST, SCA, testes, build da imagem, scan de imagem e SBOM, assinatura, DAST em staging e deploy com políticas. Cada estágio é um quality gate automático com limites claros, e os resultados alimentam um painel de vulnerabilidades.",
+    "passos": [
+      "Pre-commit: gitleaks e lint",
+      "CI: SAST (Bandit/Semgrep), SCA (pip-audit) e testes",
+      "Build: scan de imagem (Trivy) e SBOM (Syft)",
+      "Release: assinatura (cosign) e atestado de proveniência",
+      "Staging: DAST (OWASP ZAP) antes do deploy"
+    ],
+    "fontes": [
+      "OWASP DevSecOps Guideline",
+      "NIST SSDF (SP 800-218)"
+    ]
+  },
+  {
+    "id": "kb-016",
+    "titulo": "SAST: análise estática de código",
+    "categoria": "pipeline",
+    "nivel": "basico",
+    "tags": [
+      "sast",
+      "bandit",
+      "semgrep",
+      "codeql",
+      "sonarqube",
+      "analise estatica",
+      "python"
+    ],
+    "conteudo": "SAST (Static Application Security Testing) analisa o código-fonte sem executá-lo para achar padrões inseguros. Em Python use Bandit e Semgrep; em outras linguagens, CodeQL, SonarQube e afins. Rode em todo pull request, ajuste as regras para reduzir falsos positivos e trate achados de severidade alta como bloqueantes.",
+    "passos": [
+      "Rode Bandit ou Semgrep em todo pull request",
+      "Falhe o build para severidade alta",
+      "Mantenha uma lista de supressões justificadas",
+      "Treine o time para corrigir a causa, não só silenciar"
+    ],
+    "fontes": [
+      "Bandit",
+      "Semgrep",
+      "OWASP SAST"
+    ]
+  },
+  {
+    "id": "kb-017",
+    "titulo": "SCA: dependências vulneráveis",
+    "categoria": "pipeline",
+    "nivel": "basico",
+    "tags": [
+      "sca",
+      "dependencias",
+      "pip-audit",
+      "npm audit",
+      "dependabot",
+      "renovate",
+      "lockfile",
+      "cve",
+      "bibliotecas vulneraveis"
+    ],
+    "conteudo": "SCA (Software Composition Analysis) identifica dependências com vulnerabilidades conhecidas. Use pip-audit, npm audit, OWASP Dependency-Check ou Dependabot/Renovate. Fixe versões em arquivos de lock (idealmente com hashes), atualize com frequência e priorize por explorabilidade (EPSS, CISA KEV), além do CVSS.",
+    "passos": [
+      "Rode pip-audit ou equivalente no CI",
+      "Fixe versões e hashes em arquivos de lock",
+      "Ative Dependabot ou Renovate",
+      "Priorize por EPSS e KEV, não só por CVSS"
+    ],
+    "fontes": [
+      "pip-audit",
+      "OWASP Dependency-Check"
+    ]
+  },
+  {
+    "id": "kb-018",
+    "titulo": "Secret scanning (gitleaks, pre-commit)",
+    "categoria": "pipeline",
+    "nivel": "basico",
+    "tags": [
+      "secret scanning",
+      "gitleaks",
+      "trufflehog",
+      "pre-commit",
+      "push protection",
+      "vazamento de segredos",
+      "git"
+    ],
+    "conteudo": "Secret scanning detecta credenciais em código e no histórico. Use gitleaks ou trufflehog em hook de pre-commit e no pipeline, e ative o push protection do GitHub. O pre-commit evita o vazamento; o scan no CI é a rede de segurança. Se um segredo vazar, revogue e rotacione imediatamente; apagar o commit não basta.",
+    "passos": [
+      "Instale gitleaks como hook de pre-commit",
+      "Rode gitleaks no CI em todo pull request",
+      "Ative push protection no repositório",
+      "Revogue qualquer segredo detectado"
+    ],
+    "fontes": [
+      "gitleaks",
+      "GitHub secret scanning"
+    ]
+  },
+  {
+    "id": "kb-019",
+    "titulo": "DAST: testes dinâmicos (OWASP ZAP)",
+    "categoria": "pipeline",
+    "nivel": "intermediario",
+    "tags": [
+      "dast",
+      "zap",
+      "owasp zap",
+      "teste dinamico",
+      "staging",
+      "pentest automatizado",
+      "baseline"
+    ],
+    "conteudo": "DAST (Dynamic Application Security Testing) testa a aplicação em execução, como um atacante externo, com ferramentas como OWASP ZAP. Rode o scan baseline em cada deploy de staging e o scan completo periodicamente, autenticado quando possível. Complementa o SAST ao achar falhas de configuração e de runtime.",
+    "passos": [
+      "Suba um ambiente de staging descartável",
+      "Execute zap-baseline.py a cada deploy",
+      "Faça scans completos e autenticados em agenda",
+      "Trate achados altos como bloqueantes"
+    ],
+    "fontes": [
+      "OWASP ZAP"
+    ]
+  },
+  {
+    "id": "kb-020",
+    "titulo": "Cadeia de suprimentos: assinatura, SLSA e cosign",
+    "categoria": "pipeline",
+    "nivel": "avancado",
+    "tags": [
+      "supply chain",
+      "cosign",
+      "sigstore",
+      "slsa",
+      "assinatura de imagem",
+      "proveniencia",
+      "pin por sha",
+      "cadeia de suprimentos",
+      "atestado"
+    ],
+    "conteudo": "Segurança da cadeia de suprimentos protege o caminho do código até a produção. Assine artefatos e imagens (cosign/Sigstore), gere atestados de proveniência (SLSA), fixe actions e dependências por hash ou SHA, use runners efêmeros e permissões mínimas no token do CI. Verifique a assinatura no deploy com um admission controller.",
+    "passos": [
+      "Assine a imagem com cosign (keyless via OIDC)",
+      "Gere atestados de proveniência (SLSA)",
+      "Fixe GitHub Actions por SHA de commit",
+      "Use permissions: contents: read no workflow",
+      "Verifique assinaturas no momento do deploy"
+    ],
+    "fontes": [
+      "SLSA",
+      "Sigstore",
+      "OpenSSF Scorecard"
+    ]
+  },
+  {
+    "id": "kb-021",
+    "titulo": "Segurança de infraestrutura como código (IaC)",
+    "categoria": "pipeline",
+    "nivel": "intermediario",
+    "tags": [
+      "iac",
+      "terraform",
+      "checkov",
+      "kics",
+      "tfsec",
+      "opa",
+      "conftest",
+      "policy as code",
+      "cloudformation",
+      "helm"
+    ],
+    "conteudo": "Infraestrutura como código (Terraform, CloudFormation, Helm) deve ser escaneada antes do apply com Checkov, Trivy config ou KICS. Procure buckets públicos, security groups abertos, falta de criptografia e IAM com curinga. Use policy as code (OPA/Conftest) como gate e mantenha o state remoto, cifrado e com acesso restrito.",
+    "passos": [
+      "Rode checkov ou trivy config em todo pull request",
+      "Escreva políticas OPA/Conftest para regras da empresa",
+      "Guarde o state remoto, cifrado e com acesso mínimo",
+      "Exija revisão do plan antes do apply"
+    ],
+    "fontes": [
+      "Checkov",
+      "Open Policy Agent"
+    ]
+  },
+  {
+    "id": "kb-022",
+    "titulo": "Prompt injection em LLMs",
+    "categoria": "llm",
+    "nivel": "intermediario",
+    "tags": [
+      "prompt injection",
+      "injecao de prompt",
+      "llm01",
+      "jailbreak",
+      "injecao indireta",
+      "llm",
+      "guardrails"
+    ],
+    "conteudo": "Prompt injection (LLM01 no OWASP Top 10 para LLMs) ocorre quando entradas do usuário, ou conteúdo recuperado (injeção indireta), tentam sobrescrever as instruções do modelo. Não existe defesa única: combine detecção de padrões, separação clara entre instruções e dados não confiáveis, menor privilégio nas ferramentas do agente, validação da saída e aprovação humana para ações sensíveis.",
+    "passos": [
+      "Trate entrada e contexto recuperado como dados não confiáveis",
+      "Delimite e escape o contexto no prompt",
+      "Dê ao agente o mínimo de ferramentas e permissões",
+      "Valide e filtre a saída antes de entregá-la",
+      "Exija aprovação humana para ações sensíveis"
+    ],
+    "fontes": [
+      "OWASP Top 10 for LLM Applications (2025) LLM01"
+    ]
+  },
+  {
+    "id": "kb-023",
+    "titulo": "Vazamento de dados em LLMs: DLP e PII",
+    "categoria": "llm",
+    "nivel": "intermediario",
+    "tags": [
+      "pii",
+      "dlp",
+      "lgpd",
+      "cpf",
+      "dados pessoais",
+      "vazamento llm",
+      "mascaramento",
+      "redaction",
+      "privacidade",
+      "llm02"
+    ],
+    "conteudo": "LLMs podem expor dados sensíveis enviados no prompt, presentes no contexto ou memorizados. Aplique minimização: mascare CPF, e-mail, cartões e segredos antes de enviar ao modelo (DLP de entrada) e escaneie a resposta antes de entregá-la (DLP de saída). Não registre conteúdo bruto em logs, defina retenção curta e verifique contratos e regiões dos provedores (LGPD).",
+    "passos": [
+      "Mascare dados pessoais e segredos antes do envio ao modelo",
+      "Escaneie a resposta antes de entregá-la",
+      "Não grave o texto bruto em logs",
+      "Defina retenção mínima e revise contratos de provedores"
+    ],
+    "fontes": [
+      "OWASP Top 10 for LLM Applications (2025) LLM02",
+      "LGPD"
+    ]
+  },
+  {
+    "id": "kb-024",
+    "titulo": "RAG seguro: proteção da base de conhecimento",
+    "categoria": "llm",
+    "nivel": "avancado",
+    "tags": [
+      "rag",
+      "base de conhecimento",
+      "envenenamento",
+      "data poisoning",
+      "embeddings",
+      "recuperacao",
+      "contexto nao confiavel",
+      "llm08"
+    ],
+    "conteudo": "Em RAG (geração aumentada por recuperação) a base de conhecimento faz parte da superfície de ataque: documentos envenenados podem carregar instruções maliciosas. Controle quem pode editar a base, versione e assine os documentos, aplique controle de acesso por documento na recuperação, trate o contexto como dado não confiável e delimite-o no prompt.",
+    "passos": [
+      "Restrinja e audite quem altera a base",
+      "Versione e assine (ou cifre) os documentos",
+      "Filtre a recuperação por permissão do usuário",
+      "Delimite o contexto e peça citação de fontes"
+    ],
+    "fontes": [
+      "OWASP Top 10 for LLM Applications (2025) LLM04, LLM08"
+    ]
+  },
+  {
+    "id": "kb-025",
+    "titulo": "Alucinação e grounding com citações",
+    "categoria": "llm",
+    "nivel": "basico",
+    "tags": [
+      "alucinacao",
+      "grounding",
+      "citacoes",
+      "nao sei",
+      "confianca",
+      "limiar",
+      "avaliacao",
+      "misinformation",
+      "llm09"
+    ],
+    "conteudo": "Alucinação é quando o modelo produz informação plausível, porém falsa. Reduza com grounding: responder somente com base em trechos recuperados, exigir citações de fonte, definir um limiar mínimo de confiança e instruir o assistente a dizer 'não sei' quando a base não cobre a pergunta. Meça com um conjunto de avaliação de perguntas com respostas esperadas.",
+    "passos": [
+      "Responda apenas com base no contexto recuperado",
+      "Exija citação [S#] e descarte respostas sem citação válida",
+      "Defina um limiar mínimo de confiança",
+      "Mantenha um conjunto de avaliação e rode-o a cada mudança"
+    ],
+    "fontes": [
+      "OWASP Top 10 for LLM Applications (2025) LLM09"
+    ]
+  },
+  {
+    "id": "kb-026",
+    "titulo": "Barramento de mensagens seguro (Redis Streams, Kafka)",
+    "categoria": "rede",
+    "nivel": "avancado",
+    "tags": [
+      "barramento",
+      "bus",
+      "message bus",
+      "redis streams",
+      "kafka",
+      "rabbitmq",
+      "nats",
+      "hmac",
+      "replay",
+      "dead letter",
+      "fila",
+      "mensageria"
+    ],
+    "conteudo": "Um barramento de mensagens (Redis Streams, Kafka, RabbitMQ, NATS) desacopla os serviços, mas vira alvo. Proteja com autenticação e ACLs por tópico, TLS, criptografia e assinatura (HMAC) do envelope, janela anti-replay por timestamp, idempotência, dead-letter queue para falhas e rede interna isolada. Dê a cada serviço acesso somente aos tópicos de que precisa.",
+    "passos": [
+      "Exija senha ou ACL por serviço e por tópico",
+      "Cifre e assine o envelope de cada mensagem",
+      "Rejeite mensagens fora da janela de tempo (anti-replay)",
+      "Envie falhas para uma dead-letter queue",
+      "Mantenha o barramento em rede interna, sem exposição"
+    ],
+    "fontes": [
+      "OWASP Microservices Security Cheat Sheet"
+    ]
+  },
+  {
+    "id": "kb-027",
+    "titulo": "Defesa em profundidade",
+    "categoria": "rede",
+    "nivel": "basico",
+    "tags": [
+      "defesa em profundidade",
+      "camadas",
+      "dupla camada",
+      "tripla camada",
+      "arquitetura de seguranca",
+      "controles"
+    ],
+    "conteudo": "Defesa em profundidade usa várias camadas independentes, de modo que a falha de uma não comprometa o sistema. Uma divisão útil: borda (TLS, WAF, rate limit), aplicação (autenticação, autorização, validação, guardrails), dados (criptografia, segregação de chaves, auditoria) e cadeia de suprimentos (scan, assinatura). Cada camada assume que a anterior pode falhar.",
+    "passos": [
+      "Defina camadas: borda, aplicação, dados e supply chain",
+      "Garanta que nenhum controle seja ponto único de falha",
+      "Teste cada camada isoladamente",
+      "Monitore e alerte em todas as camadas"
+    ],
+    "fontes": [
+      "NIST SP 800-53",
+      "NSA Defense in Depth"
+    ]
+  },
+  {
+    "id": "kb-028",
+    "titulo": "Logs e auditoria à prova de adulteração",
+    "categoria": "rede",
+    "nivel": "intermediario",
+    "tags": [
+      "log",
+      "auditoria",
+      "siem",
+      "tamper-evident",
+      "hash chain",
+      "imutavel",
+      "worm",
+      "registro de eventos",
+      "trilha de auditoria"
+    ],
+    "conteudo": "Logs de segurança devem registrar quem fez o quê, quando e com que resultado, sem gravar segredos nem dados pessoais desnecessários. Para auditoria, torne os registros à prova de adulteração: encadeie entradas com hash ou HMAC, envie para armazenamento externo imutável (WORM) e centralize em um SIEM com alertas. Sincronize relógios (NTP) e defina retenção.",
+    "passos": [
+      "Registre quem, o quê, quando e resultado",
+      "Encadeie os registros com HMAC",
+      "Exporte para armazenamento imutável e SIEM",
+      "Nunca registre segredos nem texto bruto de usuários",
+      "Sincronize relógios e defina retenção"
+    ],
+    "fontes": [
+      "OWASP Logging Cheat Sheet",
+      "NIST SP 800-92"
+    ]
+  },
+  {
+    "id": "kb-029",
+    "titulo": "Resposta a incidentes: fases e checklist",
+    "categoria": "incidente",
+    "nivel": "basico",
+    "tags": [
+      "incidente",
+      "resposta a incidentes",
+      "contencao",
+      "erradicacao",
+      "recuperacao",
+      "forense",
+      "post-mortem",
+      "csirt",
+      "comprometido",
+      "invadido"
+    ],
+    "conteudo": "A resposta a incidentes segue as fases: preparação, detecção e análise, contenção, erradicação, recuperação e lições aprendidas. Priorize conter o dano (isolar sistemas, revogar credenciais) antes de investigar a fundo, preserve evidências (logs, imagens de disco), comunique as partes interessadas e documente a linha do tempo. Faça um post-mortem sem culpados.",
+    "passos": [
+      "Contenha: isole sistemas e revogue credenciais afetadas",
+      "Preserve evidências antes de limpar (logs, snapshots)",
+      "Avalie o escopo e a linha do tempo do incidente",
+      "Erradique a causa e recupere a partir de backups confiáveis",
+      "Comunique stakeholders e faça o post-mortem"
+    ],
+    "fontes": [
+      "NIST SP 800-61"
+    ]
+  },
+  {
+    "id": "kb-030",
+    "titulo": "Credencial vazada no Git: o que fazer",
+    "categoria": "incidente",
+    "nivel": "basico",
+    "tags": [
+      "vazou",
+      "senha no github",
+      "commit de segredo",
+      "token vazado",
+      "git filter-repo",
+      "bfg",
+      "credencial exposta",
+      "historico do git"
+    ],
+    "conteudo": "Se uma credencial foi commitada, considere-a comprometida. Primeiro revogue e rotacione o segredo no provedor; só depois limpe o histórico (git filter-repo ou BFG) e force o push, lembrando que clones e forks podem manter a cópia. Verifique os logs de uso da credencial em busca de acesso indevido e ative secret scanning para evitar recorrência.",
+    "passos": [
+      "Revogue e rotacione a credencial imediatamente",
+      "Verifique logs de uso em busca de acesso indevido",
+      "Limpe o histórico com git filter-repo ou BFG",
+      "Ative push protection e pre-commit com gitleaks"
+    ],
+    "fontes": [
+      "GitHub Docs: removing sensitive data",
+      "gitleaks"
+    ]
+  },
+  {
+    "id": "kb-031",
+    "titulo": "Rate limiting e proteção contra abuso",
+    "categoria": "rede",
+    "nivel": "basico",
+    "tags": [
+      "rate limiting",
+      "limite de requisicoes",
+      "forca bruta",
+      "brute force",
+      "ddos",
+      "dos",
+      "quota",
+      "429",
+      "llm10",
+      "throttling"
+    ],
+    "conteudo": "Rate limiting e quotas protegem contra abuso, força bruta e negação de serviço. Aplique limites em camadas: no gateway por IP, na aplicação por usuário ou token, e com limites de tamanho de payload e timeouts. No login, use bloqueio progressivo e MFA. Em LLMs, limite também os tokens por requisição (LLM10: consumo desenfreado).",
+    "passos": [
+      "Limite por IP no gateway e por usuário na aplicação",
+      "Restrinja tamanho de corpo e defina timeouts",
+      "Aplique bloqueio progressivo e MFA no login",
+      "Retorne 429 com Retry-After",
+      "Limite tokens e custo por requisição em LLMs"
+    ],
+    "fontes": [
+      "OWASP API Security Top 10",
+      "OWASP Top 10 for LLM Applications (2025) LLM10"
+    ]
+  },
+  {
+    "id": "kb-032",
+    "titulo": "LGPD: princípios e incidentes de segurança",
+    "categoria": "incidente",
+    "nivel": "intermediario",
+    "tags": [
+      "lgpd",
+      "anpd",
+      "dados pessoais",
+      "dpo",
+      "encarregado",
+      "comunicacao de incidente",
+      "base legal",
+      "minimizacao",
+      "titular"
+    ],
+    "conteudo": "A LGPD (Lei 13.709/2018) exige tratar dados pessoais com base legal, finalidade, necessidade (minimização) e medidas de segurança. Ocorrendo incidente que possa acarretar risco ou dano relevante aos titulares, o controlador deve comunicar a ANPD e os titulares no prazo definido pela regulamentação vigente (confirme a norma atual). Mantenha inventário de dados, registro das operações e um encarregado (DPO) definido.",
+    "passos": [
+      "Mantenha inventário e registro das operações de tratamento",
+      "Colete apenas o necessário (minimização)",
+      "Tenha um plano de comunicação de incidentes à ANPD e aos titulares",
+      "Defina o encarregado (DPO) e o canal do titular"
+    ],
+    "fontes": [
+      "Lei 13.709/2018 (LGPD)",
+      "ANPD"
+    ]
+  },
+  {
+    "id": "kb-033",
+    "titulo": "Modelagem de ameaças com STRIDE",
+    "categoria": "appsec",
+    "nivel": "intermediario",
+    "tags": [
+      "stride",
+      "modelagem de ameacas",
+      "threat modeling",
+      "spoofing",
+      "tampering",
+      "dfd",
+      "fronteira de confianca"
+    ],
+    "conteudo": "STRIDE é um método de modelagem de ameaças que classifica riscos em Spoofing (falsificação de identidade), Tampering (adulteração), Repudiation (repúdio), Information disclosure (vazamento), Denial of service (negação de serviço) e Elevation of privilege (elevação de privilégio). Desenhe o diagrama de fluxo de dados, marque as fronteiras de confiança e aplique as seis categorias a cada elemento.",
+    "passos": [
+      "Desenhe o diagrama de fluxo de dados (DFD)",
+      "Marque as fronteiras de confiança",
+      "Aplique as seis categorias STRIDE a cada elemento",
+      "Registre mitigações e responsáveis",
+      "Revise a cada mudança relevante de arquitetura"
+    ],
+    "fontes": [
+      "Microsoft STRIDE",
+      "OWASP Threat Modeling"
+    ]
+  },
+  {
+    "id": "kb-034",
+    "titulo": "Ransomware e estratégia de backup 3-2-1",
+    "categoria": "incidente",
+    "nivel": "intermediario",
+    "tags": [
+      "ransomware",
+      "backup",
+      "3-2-1",
+      "imutavel",
+      "restauracao",
+      "sequestro de dados",
+      "edr",
+      "continuidade"
+    ],
+    "conteudo": "Contra ransomware, combine prevenção (patches, MFA, EDR, menor privilégio, e-mail seguro) com recuperação: backups seguindo a regra 3-2-1 (três cópias, duas mídias, uma fora do local), com cópia imutável ou offline e restauração testada periodicamente. Segmente a rede para limitar a propagação e tenha um plano de resposta com contatos e decisões prévias.",
+    "passos": [
+      "Aplique a regra 3-2-1 com uma cópia imutável ou offline",
+      "Teste a restauração periodicamente",
+      "Aplique patches, MFA e EDR",
+      "Segmente a rede para limitar propagação",
+      "Mantenha um plano de resposta ensaiado"
+    ],
+    "fontes": [
+      "CISA #StopRansomware Guide"
+    ]
+  },
+  {
+    "id": "kb-035",
+    "titulo": "Gestão de vulnerabilidades: CVSS, EPSS e KEV",
+    "categoria": "pipeline",
+    "nivel": "intermediario",
+    "tags": [
+      "vulnerabilidades",
+      "cvss",
+      "epss",
+      "kev",
+      "priorizacao",
+      "patch",
+      "sla de correcao",
+      "cve",
+      "gestao de vulnerabilidades"
+    ],
+    "conteudo": "Gestão de vulnerabilidades é um ciclo: inventariar ativos, escanear, priorizar, corrigir e verificar. Priorize por risco real: exposição do ativo, existência de exploração (catálogo CISA KEV), probabilidade (EPSS) e impacto, e não apenas pela nota CVSS. Defina SLAs de correção por severidade e acompanhe métricas como o tempo médio de correção.",
+    "passos": [
+      "Mantenha o inventário de ativos atualizado",
+      "Priorize por KEV, EPSS, exposição e impacto",
+      "Defina SLAs de correção por severidade",
+      "Verifique a correção com novo scan",
+      "Acompanhe o tempo médio de correção"
+    ],
+    "fontes": [
+      "FIRST EPSS",
+      "CISA KEV",
+      "FIRST CVSS"
+    ]
+  },
+  {
+    "id": "kb-036",
+    "titulo": "Criptografia em repouso, KMS e chaves de envelope",
+    "categoria": "cripto",
+    "nivel": "avancado",
+    "tags": [
+      "criptografia em repouso",
+      "kms",
+      "hsm",
+      "envelope encryption",
+      "chave mestra",
+      "rotacao de chaves",
+      "gerenciamento de chaves",
+      "cifrar arquivos",
+      "base cifrada"
+    ],
+    "conteudo": "Criptografia em repouso protege dados armazenados (discos, bancos, backups, arquivos). Use criptografia de envelope: uma chave de dados cifra o conteúdo e uma chave mestra (KMS ou HSM) protege a chave de dados. Separe chaves por finalidade (HKDF), controle quem pode usá-las, rotacione e registre cada uso.",
+    "passos": [
+      "Use criptografia de envelope com KMS ou HSM",
+      "Separe chaves por finalidade (HKDF)",
+      "Restrinja e audite o uso das chaves",
+      "Planeje a rotação e a re-cifragem",
+      "Teste o procedimento de recuperação de chaves"
+    ],
+    "fontes": [
+      "NIST SP 800-57",
+      "OWASP Cheat Sheet: Key Management"
+    ]
+  },
+  {
+    "id": "kb-037",
+    "titulo": "Segurança de APIs REST",
+    "categoria": "appsec",
+    "nivel": "intermediario",
+    "tags": [
+      "api",
+      "rest",
+      "cors",
+      "validacao de esquema",
+      "cabecalhos de seguranca",
+      "erros genericos",
+      "autenticacao de api",
+      "owasp api",
+      "bola"
+    ],
+    "conteudo": "APIs devem exigir autenticação em todos os endpoints não públicos, validar a entrada com esquema estrito (rejeitando campos extras), limitar tamanho e taxa, devolver erros genéricos sem stack trace, configurar CORS restritivo e enviar cabeçalhos de segurança. Verifique a autorização por objeto em cada requisição (BOLA) e versione a API.",
+    "passos": [
+      "Exija autenticação e autorize por objeto",
+      "Valide com esquema estrito e rejeite campos extras",
+      "Retorne erros genéricos, sem detalhes internos",
+      "Configure CORS restritivo e cabeçalhos de segurança",
+      "Aplique rate limiting e limite de payload"
+    ],
+    "fontes": [
+      "OWASP API Security Top 10 (2023)"
+    ]
+  }
+]

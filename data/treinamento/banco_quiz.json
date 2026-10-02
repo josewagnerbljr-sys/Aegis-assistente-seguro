@@ -1,0 +1,296 @@
+[
+  {
+    "id": "q-01",
+    "categoria": "appsec",
+    "nivel": "basico",
+    "pergunta": "Qual é a defesa principal contra injeção SQL?",
+    "opcoes": [
+      "Remover aspas da entrada",
+      "Consultas parametrizadas",
+      "Esconder mensagens de erro",
+      "Usar HTTPS"
+    ],
+    "correta": 1,
+    "explicacao": "Parametrização separa código de dados; as demais medidas são complementares ou irrelevantes para a causa."
+  },
+  {
+    "id": "q-02",
+    "categoria": "appsec",
+    "nivel": "basico",
+    "pergunta": "Esconder o botão 'Excluir' na interface para usuários comuns é suficiente como controle de acesso?",
+    "opcoes": [
+      "Sim",
+      "Sim, se o botão for removido do HTML",
+      "Não: a autorização deve ser verificada no servidor",
+      "Só em APIs"
+    ],
+    "correta": 2,
+    "explicacao": "O cliente é controlado pelo atacante; a verificação precisa ocorrer no servidor, por objeto."
+  },
+  {
+    "id": "q-03",
+    "categoria": "cripto",
+    "nivel": "intermediario",
+    "pergunta": "O que NÃO pode acontecer ao usar AES-GCM?",
+    "opcoes": [
+      "Usar chave de 256 bits",
+      "Repetir o nonce com a mesma chave",
+      "Usar dados associados (AAD)",
+      "Rotacionar chaves"
+    ],
+    "correta": 1,
+    "explicacao": "Repetir o nonce com a mesma chave destrói a confidencialidade e a autenticação do GCM."
+  },
+  {
+    "id": "q-04",
+    "categoria": "iam",
+    "nivel": "basico",
+    "pergunta": "Qual é a forma adequada de armazenar senhas?",
+    "opcoes": [
+      "SHA-256 simples",
+      "MD5 com sal",
+      "Argon2id, scrypt ou bcrypt com sal",
+      "Cifradas com AES e chave no código"
+    ],
+    "correta": 2,
+    "explicacao": "Funções lentas com sal dificultam ataques de força bruta; hashes rápidos e cifragem reversível são inadequados."
+  },
+  {
+    "id": "q-05",
+    "categoria": "iam",
+    "nivel": "intermediario",
+    "pergunta": "Qual prática é correta para JWT?",
+    "opcoes": [
+      "Aceitar o algoritmo informado no cabeçalho",
+      "Colocar a senha do usuário no payload",
+      "Fixar o algoritmo no servidor e validar exp, iss e aud",
+      "Usar validade de 1 ano"
+    ],
+    "correta": 2,
+    "explicacao": "O servidor decide o algoritmo; o payload é apenas codificado; tokens devem ter vida curta."
+  },
+  {
+    "id": "q-06",
+    "categoria": "container",
+    "nivel": "basico",
+    "pergunta": "Qual instrução do Dockerfile evita que o contêiner rode como root?",
+    "opcoes": [
+      "EXPOSE",
+      "USER",
+      "WORKDIR",
+      "ENTRYPOINT"
+    ],
+    "correta": 1,
+    "explicacao": "USER define o usuário de execução; combine com cap_drop e no-new-privileges."
+  },
+  {
+    "id": "q-07",
+    "categoria": "container",
+    "nivel": "intermediario",
+    "pergunta": "Qual conjunto de opções endurece o runtime de um contêiner?",
+    "opcoes": [
+      "privileged: true e docker.sock montado",
+      "read_only, cap_drop ALL e no-new-privileges",
+      "network_mode: host",
+      "Executar como root para facilitar logs"
+    ],
+    "correta": 1,
+    "explicacao": "Sistema de arquivos somente leitura, sem capabilities e sem escalada de privilégios reduzem muito a superfície."
+  },
+  {
+    "id": "q-08",
+    "categoria": "rede",
+    "nivel": "intermediario",
+    "pergunta": "Em Docker Compose, o que 'internal: true' faz em uma rede?",
+    "opcoes": [
+      "Criptografa o tráfego",
+      "Impede rota para fora (sem internet)",
+      "Habilita IPv6",
+      "Libera todas as portas"
+    ],
+    "correta": 1,
+    "explicacao": "Redes internas não têm gateway externo; úteis para o barramento e os dados."
+  },
+  {
+    "id": "q-09",
+    "categoria": "pipeline",
+    "nivel": "basico",
+    "pergunta": "Em qual etapa do pipeline um segredo commitado deve ser detectado primeiro?",
+    "opcoes": [
+      "Em produção",
+      "No pre-commit/push (gitleaks)",
+      "Só no pentest anual",
+      "No DAST"
+    ],
+    "correta": 1,
+    "explicacao": "Shift-left: o ideal é barrar antes do commit; o CI é a rede de segurança."
+  },
+  {
+    "id": "q-10",
+    "categoria": "pipeline",
+    "nivel": "basico",
+    "pergunta": "O que o SAST analisa?",
+    "opcoes": [
+      "A aplicação em execução",
+      "O código-fonte sem executá-lo",
+      "O tráfego de rede",
+      "Os logs de produção"
+    ],
+    "correta": 1,
+    "explicacao": "SAST é análise estática; DAST testa o sistema rodando."
+  },
+  {
+    "id": "q-11",
+    "categoria": "pipeline",
+    "nivel": "intermediario",
+    "pergunta": "Para que serve um SBOM?",
+    "opcoes": [
+      "Acelerar o build",
+      "Listar os componentes de software de um artefato",
+      "Substituir o scan de vulnerabilidades",
+      "Criptografar a imagem"
+    ],
+    "correta": 1,
+    "explicacao": "O SBOM inventaria dependências e permite cruzar com bases de CVE continuamente."
+  },
+  {
+    "id": "q-12",
+    "categoria": "pipeline",
+    "nivel": "avancado",
+    "pergunta": "Qual medida protege a cadeia de suprimentos de CI/CD?",
+    "opcoes": [
+      "Usar actions pela tag móvel 'latest'",
+      "Fixar actions por SHA e assinar artefatos com cosign",
+      "Dar ao token do CI permissão de escrita em tudo",
+      "Desabilitar logs"
+    ],
+    "correta": 1,
+    "explicacao": "Pinagem por SHA evita troca silenciosa de código; assinatura permite verificar a origem."
+  },
+  {
+    "id": "q-13",
+    "categoria": "pipeline",
+    "nivel": "intermediario",
+    "pergunta": "Ao priorizar vulnerabilidades, qual combinação é melhor que usar só o CVSS?",
+    "opcoes": [
+      "Ordem alfabética",
+      "KEV, EPSS, exposição e impacto no negócio",
+      "Data de publicação",
+      "Tamanho do pacote"
+    ],
+    "correta": 1,
+    "explicacao": "KEV indica exploração real; EPSS, a probabilidade; exposição e impacto contextualizam o risco."
+  },
+  {
+    "id": "q-14",
+    "categoria": "llm",
+    "nivel": "basico",
+    "pergunta": "O que é prompt injection?",
+    "opcoes": [
+      "Um bug de rede",
+      "Entrada que tenta sobrescrever as instruções do modelo",
+      "Um tipo de criptografia",
+      "Uma técnica de otimização de prompts"
+    ],
+    "correta": 1,
+    "explicacao": "O texto do usuário (ou do contexto recuperado) tenta fazer o modelo desobedecer suas regras."
+  },
+  {
+    "id": "q-15",
+    "categoria": "llm",
+    "nivel": "intermediario",
+    "pergunta": "Qual conjunto reduz o risco de prompt injection?",
+    "opcoes": [
+      "Uma única regra no prompt",
+      "Tratar contexto como dado, minimizar ferramentas e validar a saída",
+      "Aumentar a temperatura",
+      "Remover o prompt do sistema"
+    ],
+    "correta": 1,
+    "explicacao": "Não há defesa única: combine separação de dados, menor privilégio e validação da saída."
+  },
+  {
+    "id": "q-16",
+    "categoria": "llm",
+    "nivel": "basico",
+    "pergunta": "Como reduzir alucinações em um assistente com RAG?",
+    "opcoes": [
+      "Pedir ao modelo para 'ser preciso'",
+      "Responder só com base no contexto, exigir citação e dizer 'não sei'",
+      "Aumentar o tamanho da resposta",
+      "Desativar a base de conhecimento"
+    ],
+    "correta": 1,
+    "explicacao": "Grounding com citações e limiar de confiança tornam a resposta verificável."
+  },
+  {
+    "id": "q-17",
+    "categoria": "llm",
+    "nivel": "avancado",
+    "pergunta": "Por que mascarar CPF e segredos ANTES de enviar a pergunta ao provedor de LLM?",
+    "opcoes": [
+      "Para reduzir o custo",
+      "Para minimizar a exposição de dados pessoais a terceiros (LGPD)",
+      "Para o modelo responder mais rápido",
+      "Não é necessário"
+    ],
+    "correta": 1,
+    "explicacao": "Minimização: o que não é enviado não pode vazar nem ser retido pelo provedor."
+  },
+  {
+    "id": "q-18",
+    "categoria": "rede",
+    "nivel": "avancado",
+    "pergunta": "Qual combinação protege melhor uma mensagem em um barramento?",
+    "opcoes": [
+      "Somente rede interna",
+      "Criptografia AEAD + HMAC + janela anti-replay + DLQ",
+      "Somente Base64",
+      "Somente compressão"
+    ],
+    "correta": 1,
+    "explicacao": "Confidencialidade, integridade, anti-replay e tratamento de falhas se complementam."
+  },
+  {
+    "id": "q-19",
+    "categoria": "incidente",
+    "nivel": "basico",
+    "pergunta": "Você commitou uma chave de API no GitHub. Qual é o PRIMEIRO passo?",
+    "opcoes": [
+      "Apagar o commit e seguir em frente",
+      "Revogar e rotacionar a chave",
+      "Tornar o repositório privado e ignorar",
+      "Esperar alguém usar"
+    ],
+    "correta": 1,
+    "explicacao": "A chave deve ser considerada comprometida; revogar vem antes de limpar o histórico."
+  },
+  {
+    "id": "q-20",
+    "categoria": "incidente",
+    "nivel": "intermediario",
+    "pergunta": "Qual regra de backup ajuda contra ransomware?",
+    "opcoes": [
+      "Uma cópia no mesmo disco",
+      "3-2-1 com cópia imutável ou offline e restauração testada",
+      "Backup só uma vez por ano",
+      "Backup montado como unidade de rede com escrita"
+    ],
+    "correta": 1,
+    "explicacao": "Cópias imutáveis/offline sobrevivem à criptografia do ambiente; sem teste de restauração, não há garantia."
+  },
+  {
+    "id": "q-21",
+    "categoria": "appsec",
+    "nivel": "intermediario",
+    "pergunta": "No STRIDE, 'T' significa:",
+    "opcoes": [
+      "Throttling",
+      "Tampering (adulteração)",
+      "Tokenization",
+      "Tracing"
+    ],
+    "correta": 1,
+    "explicacao": "STRIDE: Spoofing, Tampering, Repudiation, Information disclosure, DoS, Elevation of privilege."
+  }
+]

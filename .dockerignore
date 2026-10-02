@@ -1,0 +1,9 @@
+.git
+.env
+tests
+docs
+eval
+var
+__pycache__
+*.md
+deploy/certs
