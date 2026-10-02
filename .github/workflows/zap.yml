@@ -23,7 +23,7 @@ jobs:
 
       - name: Subir a API (modo dev)
         run: |
-          AEGIS_ENV=dev PYTHONPATH=src nohup python -m uvicorn aegis.main:app \
+          AEGIS_ENV=dev PYTHONPATH=src nohup python -m uvicorn aegis.main:create_app --factory \
             --host 0.0.0.0 --port 8000 > api.log 2>&1 &
           for i in $(seq 1 30); do
             curl -sf http://localhost:8000/openapi.json > /dev/null && exit 0
