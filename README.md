@@ -42,7 +42,7 @@ flowchart LR
 ## Início rápido (sem Docker)
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate   # Git Bash/Windows: source .venv/Scripts/activate
 pip install -r requirements-dev.txt
 
 make test      # 63 testes + cobertura
@@ -79,8 +79,8 @@ Para IA generativa, defina `AEGIS_LLM_CHAIN=anthropic,openai_compat` e as chaves
 | Lógica, API, barramento, auditoria, guardrails, RAG | ✅ testados e executados (63 testes, ~84% de cobertura) |
 | Lint (ruff) e SAST (Bandit) | ✅ executados sem achados |
 | Barramento Redis Streams | ✅ testado com `fakeredis` (ida/volta e DLQ); ⚠️ validar contra um Redis real |
-| Dockerfile, docker-compose, nginx | ⚠️ escritos conforme boas práticas, **não executados** no ambiente de criação |
-| Workflows de CI, GitLab CI, política OPA | ⚠️ YAML validado; **não executados** em um runner real |
+| Dockerfile (imagem) | ✅ construída e executada (usuário não-root, `/app/var` gravável); docker-compose e nginx: ⚠️ ainda não executados |
+| GitHub Actions (qualidade, contêiner, Trivy, SBOM, OPA, ZAP) | ✅ executados em runner real; GitLab CI: ⚠️ YAML validado, não executado |
 | Provedores Anthropic/OpenAI-compatível | ⚠️ testados só com provedores falsos (sem chamadas reais) |
 
 As métricas de avaliação usam um conjunto escrito pelo mesmo autor da base: servem como teste de regressão (veja `docs/05`).
@@ -101,3 +101,12 @@ docs/             documentação dos 6 passos + arquitetura/ameaças
 ```
 
 Uso educacional e defensivo. Licença: [MIT](LICENSE).
+
+## Autor
+
+**José Wagner Blanco Júnior** — Principal AI Systems Architect
+
+- GitHub: [josewagnerbljr-sys](https://github.com/josewagnerbljr-sys)
+- LinkedIn: [blancoconsultoria](https://www.linkedin.com/in/blancoconsultoria)
+- DIO: [consultoriablanco8](https://web.dio.me/users/consultoriablanco8)
+- E-mail: consultoriablanco8@gmail.com
